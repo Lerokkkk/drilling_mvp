@@ -4,7 +4,7 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from config import TEST_DB_USER, TEST_DB_HOST, TEST_DB_NAME, TEST_DB_PASSWORD
+from src.config import TEST_DB_USER, TEST_DB_HOST, TEST_DB_NAME, TEST_DB_PASSWORD
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -19,7 +19,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-from models.models import Base
+from src.models import Base
 
 target_metadata = Base.metadata
 
