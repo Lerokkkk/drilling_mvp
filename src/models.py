@@ -45,6 +45,9 @@ class Name(Base):
         back_populates='name'
     )
 
+    def __repr__(self):
+        return f"{self.id}-{self.name}"
+
 
 class NameMachine(Base):
     __tablename__ = 'main_name_machine'
