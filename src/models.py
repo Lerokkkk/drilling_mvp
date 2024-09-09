@@ -19,7 +19,7 @@ class Machine(Base):
     check_time: Mapped[int]
     input_command: Mapped[str]
 
-    names: Mapped[list['Name']] = relationship(
+    names: Mapped[set['Name']] = relationship(
         back_populates='machines',
         secondary='main_name_machine'
     )
@@ -37,7 +37,7 @@ class Name(Base):
     id = Column(BigInteger, primary_key=True)
     name: Mapped[str] = mapped_column(unique=True)
 
-    machines: Mapped[list['Machine']] = relationship(
+    machines: Mapped[set['Machine']] = relationship(
         back_populates='names',
         secondary="main_name_machine"
     )
@@ -56,8 +56,9 @@ class NameMachine(Base):
     )
 
     id = mapped_column(BigInteger, primary_key=True)
-    name_id: Mapped[int] = mapped_column(BigInteger, ForeignKey('main_name.id', ondelete="CASCADE"))
     machine_id: Mapped[int] = mapped_column(BigInteger, ForeignKey('main_machine.id', ondelete="CASCADE"))
+    name_id: Mapped[int] = mapped_column(BigInteger, ForeignKey('main_name.id', ondelete="CASCADE"))
+
 
 
 class MegaCompile(Base):

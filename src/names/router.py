@@ -1,7 +1,10 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+
 from src.db import get_db
+from src.machines.crud import MachineCrud
 from src.models import Name
 from src.names.crud import NameCrud
 from src.names.schemas import BaseName, CreateName, ShowName
@@ -48,3 +51,8 @@ async def create_name_view(name: CreateName | list[CreateName], db: AsyncSession
 async def update_name_view(name_id: int, dto: BaseName, db: AsyncSession = Depends(get_db)):
     db_name = NameCrud(db)
     return await db_name.update(name_id, dto)
+
+
+# @name_router.get("/mam/")
+# async def get_mam():
+#     return {"success": "hello"}
