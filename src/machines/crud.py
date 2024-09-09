@@ -1,45 +1,32 @@
-from fastapi import HTTPException
-
-from sqlalchemy import select, update
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.models import Machine
-from src.machines.schemas import CreateMachine, UpdateMachine
+from sqlalchemy.orm import selectinload
+
+from src.models import Machine, Name
+from src.utils import BaseCrudMixin
 
 
-async def find_machine(machine_id: int, db):
-    machine = await db.get(Machine, machine_id)
-    return machine
+class MachineCrud(BaseCrudMixin):
+    def __init__(self, db: AsyncSession):
+        super().__init__(model=Machine, db=db)
 
+    async def get_machines_by_ids(self, ids: list[int]):
+        machines = await self.db.execute(select(self.model).filter(self.model.id.in_(ids)))
+        machines = machines.scalars().all()
+        return machines
 
-async def create_machine(machine: CreateMachine, db):
-    print(machine.model_dump())
-    db_machine = Machine(**machine.model_dump())
-    db.add(db_machine)
-    await db.commit()
-    await db.refresh(db_machine)
-    return db_machine
+    async def get_machines(self):
+        res = await self.db.execute(select(self.model))
+        return res.scalars().all()
 
+    async def add_names_to_machine(self, machine_id: int, names: list[Name], options: list[selectinload] = None):
+        machine = await self.read(machine_id, options)
+        print(getattr(machine, "names"))
 
-async def get_machines(db: AsyncSession):
-    res = await db.execute(select(Machine))
-    return res.scalars().all()
+        machine.names.update(names)
+        try:
+            await self.db.commit()
 
-
-async def update_machine(machine_id: int, dto: UpdateMachine, db: AsyncSession):
-    db_machine = await find_machine(machine_id, db)
-    if db_machine is None:
-        raise HTTPException(status_code=404, detail='Machine not found')
-    q = update(Machine).filter(Machine.id == machine_id).values(dto.model_dump(exclude_unset=True))
-    await db.execute(q)
-    await db.commit()
-    await db.refresh(db_machine)
-    return db_machine
-
-
-async def delete_machine(machine_id: int, db: AsyncSession):
-    db_machine = await find_machine(machine_id, db)
-    if db_machine is None:
-        raise HTTPException(status_code=404, detail='Machine not found')
-    await db.delete(db_machine)
-    await db.commit()
-    return {"machine_id": machine_id}
+        except Exception as e:
+            print(e)
+        return names
