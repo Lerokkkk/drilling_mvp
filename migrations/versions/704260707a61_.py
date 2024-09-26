@@ -1,8 +1,8 @@
-"""create-user-model-revise
+"""empty message
 
-Revision ID: 37dc100d88c8
-Revises: 
-Create Date: 2024-09-01 17:20:29.343632
+Revision ID: 704260707a61
+Revises: 06750307ac38
+Create Date: 2024-09-26 13:17:38.514968
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = '37dc100d88c8'
-down_revision: Union[str, None] = None
+revision: str = '704260707a61'
+down_revision: Union[str, None] = '06750307ac38'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -54,8 +54,8 @@ def upgrade() -> None:
     )
     op.create_table('main_name_machine',
     sa.Column('id', sa.BigInteger(), nullable=False),
-    sa.Column('name_id', sa.BigInteger(), nullable=False),
     sa.Column('machine_id', sa.BigInteger(), nullable=False),
+    sa.Column('name_id', sa.BigInteger(), nullable=False),
     sa.ForeignKeyConstraint(['machine_id'], ['main_machine.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['name_id'], ['main_name.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id'),

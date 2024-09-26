@@ -4,6 +4,9 @@ from pydantic import BaseModel
 class BaseName(BaseModel):
     name: str
 
+    class Config:
+        from_attributes = True
+
 
 class ShowName(BaseName):
     id: int
@@ -11,7 +14,3 @@ class ShowName(BaseName):
 
 class CreateName(BaseName):
     pass
-
-
-class ExName(BaseName):
-    imp: int = 10

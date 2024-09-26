@@ -4,7 +4,7 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from src.config import TEST_DB_USER, TEST_DB_HOST, TEST_DB_NAME, TEST_DB_PASSWORD
+from src.settings.config import settings
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -20,7 +20,7 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 from src.db import Base
-from src.models import Name
+from src.models import *
 
 target_metadata = Base.metadata
 
@@ -28,10 +28,10 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-config.set_main_option("TEST_DB_USER", TEST_DB_USER)
-config.set_main_option("TEST_DB_HOST", TEST_DB_HOST)
-config.set_main_option("TEST_DB_NAME", TEST_DB_NAME)
-config.set_main_option("TEST_DB_PASSWORD", TEST_DB_PASSWORD)
+config.set_main_option("TEST_DB_USER", settings.db_user)
+config.set_main_option("TEST_DB_HOST", settings.db_host)
+config.set_main_option("TEST_DB_NAME", settings.db_name)
+config.set_main_option("TEST_DB_PASSWORD", settings.db_password)
 
 
 def run_migrations_offline() -> None:

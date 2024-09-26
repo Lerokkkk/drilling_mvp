@@ -1,7 +1,9 @@
 from sqlalchemy import select
+from sqlalchemy.dialects import postgresql
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from src.names.crud import NameCrud
 from src.models import Machine, Name
 from src.utils import BaseCrudMixin
 
@@ -11,7 +13,8 @@ class MachineCrud(BaseCrudMixin):
         super().__init__(model=Machine, db=db)
 
     async def get_machines_by_ids(self, ids: list[int]):
-        machines = await self.db.execute(select(self.model).filter(self.model.id.in_(ids)))
+        q = select(self.model).filter(self.model.id.in_(ids))
+        machines = await self.db.execute(q)
         machines = machines.scalars().all()
         return machines
 
@@ -19,14 +22,4 @@ class MachineCrud(BaseCrudMixin):
         res = await self.db.execute(select(self.model))
         return res.scalars().all()
 
-    async def add_names_to_machine(self, machine_id: int, names: list[Name], options: list[selectinload] = None):
-        machine = await self.read(machine_id, options)
-        print(getattr(machine, "names"))
 
-        machine.names.update(names)
-        try:
-            await self.db.commit()
-
-        except Exception as e:
-            print(e)
-        return names
