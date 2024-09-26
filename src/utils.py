@@ -75,14 +75,9 @@ ModelType = TypeVar("ModelType", bound=Base)
 class RelationObjectsMixin(Generic[ModelType]):
     async def add_related_objects(self, obj: ModelType, related_objects: list[ModelType], relation_field: str):
         update_field = getattr(obj, relation_field)
-        print(update_field)
         update_field.update(related_objects)
-        try:
-            await self.db.commit()
-            return related_objects
-
-        except Exception as e:
-            print(e)
+        await self.db.commit()
+        return related_objects
 
     async def delete_related_objects(self, obj: ModelType, relation_field: str):
         update_field = getattr(obj, relation_field)
@@ -90,4 +85,14 @@ class RelationObjectsMixin(Generic[ModelType]):
         await self.db.commit()
         return {"result": "success"}
 
+    async def update_related_field(self, obj: ModelType, related_objects: list[ModelType], relation_field: str):
+        update_field = getattr(obj, relation_field)
+        update_field.clear()
+        update_field.update(related_objects)
+        print(related_objects)
+        await self.db.commit()
+        await self.db.refresh(obj)
+
+        res = getattr(obj, relation_field)
+        return res
 

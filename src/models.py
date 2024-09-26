@@ -60,7 +60,6 @@ class NameMachine(Base):
     name_id: Mapped[int] = mapped_column(BigInteger, ForeignKey('main_name.id', ondelete="CASCADE"))
 
 
-
 class MegaCompile(Base):
     __tablename__ = 'main_megacompila'
     id = mapped_column(BigInteger, primary_key=True)
