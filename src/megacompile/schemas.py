@@ -13,3 +13,7 @@ class BaseMegaCompile(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class ShowDateTimes(BaseModel):
+    get_time: datetime
