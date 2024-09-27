@@ -1,9 +1,11 @@
+import datetime
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db import get_db
 from src.megacompile.crud import MegaCompileCrud
-from src.megacompile.schemas import BaseMegaCompile
+from src.megacompile.schemas import BaseMegaCompile, ShowDateTimes
 
 mega_compile_router = APIRouter(prefix='/megacompile', tags=['megacompile'])
 
@@ -13,8 +15,7 @@ async def get_mega_compile(mega_compile_id: int, db: AsyncSession = Depends(get_
     return await MegaCompileCrud(db).read(mega_compile_id)
 
 
-@mega_compile_router.post('/{mega_compile_id}')
+@mega_compile_router.post('/{mega_compile_id}', response_model=list[ShowDateTimes])
 async def create_mega_compile(dto: list[BaseMegaCompile], db: AsyncSession = Depends(get_db)):
     res = await MegaCompileCrud(db).create(dto)
-    print(res)
-    return "success"
+    return [ShowDateTimes(get_time=item) for item in res]

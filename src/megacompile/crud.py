@@ -1,4 +1,6 @@
+from fastapi import HTTPException
 from sqlalchemy.dialects.postgresql import insert
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.models import MegaCompile
@@ -13,15 +15,15 @@ class MegaCompileCrud(BaseCrudMixin):
         stmt = insert(self.model).returning(self.model.get_time)
         print(stmt.compile(dialect=self.db.bind.dialect, compile_kwargs={'literal_binds': True}))
 
-        res_stmt = await self.db.execute(stmt, dto)
+        try:
+            res_stmt = await self.db.execute(stmt, dto)
+            await self.db.flush()
 
-        await self.db.flush()
+            inserted_rows = res_stmt.scalars().fetchall()
 
-        inserted_rows = res_stmt.scalars().fetchall()
-
-        await self.db.commit()
-
+            await self.db.commit()
+        except IntegrityError as e:
+            print(f'Ошибка: {e.__dict__}')
+            raise HTTPException(status_code=404, detail=f'{e.orig}')
 
         return inserted_rows
-
-
