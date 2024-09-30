@@ -24,3 +24,14 @@ class CreateMegaCompiles(BaseModel):
 
 class ShowDateTimes(BaseModel):
     get_time: datetime
+
+
+class ValueTimeMegaCompile(BaseModel):
+    value: float
+    get_time: datetime
+
+
+class MachineNameMegaCompile(BaseModel):
+    compile_data: ValueTimeMegaCompile
+    machine_name: str
+    name: str
