@@ -2,10 +2,10 @@ from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.models import Name
-from src.utils import BaseCrudMixin, RelationObjectsMixin
+from src.utils import BaseCrudMixin
 
 
-class NameCrud(BaseCrudMixin, RelationObjectsMixin):
+class NameCrud(BaseCrudMixin):
 
     def __init__(self, db: AsyncSession):
         super().__init__(model=Name, db=db)
