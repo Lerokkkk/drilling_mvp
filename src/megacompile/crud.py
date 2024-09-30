@@ -13,6 +13,7 @@ class MegaCompileCrud(BaseCrudMixin):
 
     async def create(self, dto: list):
         stmt = insert(self.model).returning(self.model.get_time)
+        print(dto)
         print(stmt.compile(dialect=self.db.bind.dialect, compile_kwargs={'literal_binds': True}))
 
         try:
@@ -23,7 +24,6 @@ class MegaCompileCrud(BaseCrudMixin):
 
             await self.db.commit()
         except IntegrityError as e:
-            print(f'Ошибка: {e.__dict__}')
             raise HTTPException(status_code=404, detail=f'{e.orig}')
 
         return inserted_rows

@@ -15,5 +15,12 @@ class BaseMegaCompile(BaseModel):
         from_attributes = True
 
 
+class CreateMegaCompiles(BaseModel):
+    value: float
+    get_time: datetime
+    analog: bool
+    unit: str
+
+
 class ShowDateTimes(BaseModel):
     get_time: datetime
