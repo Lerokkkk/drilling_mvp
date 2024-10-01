@@ -27,3 +27,7 @@ class MegaCompileService:
         print(mega_compiles)
 
         return await self.mega_compile_crud.create(mega_compiles)
+
+    async def get_mega_compile_by_fk(self, machine_id: int, name_id: int):
+        res = await self.mega_compile_crud.read_by_fk(machine_id, name_id)
+        return res
