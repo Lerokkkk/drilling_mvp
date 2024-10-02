@@ -8,7 +8,7 @@ from src.settings.config import *
 Base = declarative_base()
 
 engine = create_async_engine(
-    f"postgresql+asyncpg://{settings.db_user}:{settings.db_password}@{settings.db_host}:5432/{settings.db_name}"
+    f"postgresql+asyncpg://{settings.db_user}:{settings.db_password}@{settings.get_db_host()}:5432/{settings.db_name}"
 )
 
 async_session = async_sessionmaker(engine, class_=AsyncSession)
